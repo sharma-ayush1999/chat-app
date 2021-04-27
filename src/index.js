@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 const port = process.env.PORT || 3000;
-const publicDirectoryPath = path.join(__dirname, '../public');
+const publicDirectoryPath = path.join(__dirname, "../public");
 
 app.use(express.static(publicDirectoryPath));
 
@@ -17,24 +17,39 @@ let count = 0;
 //  server (emit) -> client (recieve) - countUpdated
 // client (emit) -> server (recieve) - increment
 
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
+  console.log("New web socket connection");
 
-    console.log("New web socket connection");
+  socket.emit("message", "Welcome");
 
-    socket.emit('message', 'Welcome');
+  socket.broadcast.emit("message", "A new user has joined!");
 
-    socket.on('sendMessage', (message) => {
-        io.emit('message', message);
-    })
-    // socket.emit('countUpdated', count)
-    // socket.on('increment', () => {
-    //     count++;
-    //     //socket.emit('countUpdated', count)
-    //     io.emit('countUpdated', count)
-    // })
-})
+  socket.on("sendMessage", (message) => {
+    io.emit("message", message);
+  });
 
-server.listen(port, () => {
-    console.log(`Server is up on port ${port}!`)
+  socket.on("disconnect", () => {
+    io.emit("message", "A user has left!");
+  });
+
+  // socket.on('sendLocation', (coords) => {
+  //     io.emit('message', `Location:${coords.latitude}, ${coords.longitude}` )
+  // })
+
+  socket.on("sendLocation", (coords) => {
+    io.emit(
+      "message",
+      `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+    );
+  });
+  // socket.emit('countUpdated', count)
+  // socket.on('increment', () => {
+  //     count++;
+  //     //socket.emit('countUpdated', count)
+  //     io.emit('countUpdated', count)
+  // })
 });
 
+server.listen(port, () => {
+  console.log(`Server is up on port ${port}!`);
+});
