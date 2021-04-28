@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
   socket.emit('message', generateMessage('Welcome!'))
 
-  socket.broadcast.emit("message", "A new user has joined!");
+  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
 
   socket.on("sendMessage", (message, callback) => {
     const filter = new Filter();
@@ -47,13 +47,15 @@ io.on("connection", (socket) => {
   socket.on("sendLocation", (coords, callback) => {
     io.emit(
       "locationMessage",
-      `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+      generateMessage(
+        `https://google.com/maps?q=${coords.latitude},${coords.longitude}`
+      )
     );
     callback();
   });
 
   socket.on("disconnect", () => {
-    io.emit("message", "A user has left!");
+    // io.emit("message", "A user has left!");
     io.emit("message", generateMessage("A user has left!"));
   });
 
