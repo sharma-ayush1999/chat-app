@@ -25,15 +25,23 @@
     </div>
 
     <script id="message-template" type="text/html">
-      <div>
-        <p>{{createdAt}} - {{message}}</p>
+      <div class="message">
+        <p>
+          <span class="message__name">Some user name</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>{{message}}</p>
       </div>
     </script>
 
     <script id="location-message-template" type="text/html">
-      <div>
+      <div class="message">
         <p>
-          {{createdAt}} -
+          <span class="message__name">Some user name</span>
+          <span class="message__meta">{{createdAt}}</span>
+        </p>
+        <p>{{message}}</p>
+        <p>
           <a href="{{url}}" target="_blank">My current location</a>
         </p>
       </div>
