@@ -3,7 +3,7 @@ const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
 const Filter = require("bad-words");
-const { generateMessage }= require('./utils/messages');
+const { generateMessage } = require("./utils/messages");
 
 const app = express();
 const server = http.createServer(app);
@@ -29,10 +29,20 @@ io.on("connection", (socket) => {
   //   createdAt: new Date().getTime()
   // })
 
-  socket.emit('message', generateMessage('Welcome!'))
+  socket.on("join", ({ username, room }) => {
+    socket.join(room);
 
-  socket.broadcast.emit("message", generateMessage("A new user has joined!"));
+     socket.emit("message", generateMessage("Welcome!"));
+     socket.broadcast.to(room).emit(
+       "message",
+       generateMessage(`${username} has joined`)
+     );
 
+    //socket.emit, io.emit, socket.boradcast.emit
+    //io.to.emit, socket.broadcast.to.emit
+
+
+  });
   socket.on("sendMessage", (message, callback) => {
     const filter = new Filter();
 
@@ -40,7 +50,7 @@ io.on("connection", (socket) => {
       return callback("Profanity is not allowed");
     }
     // io.emit("message", message);
-    io.emit("message", generateMessage(message));
+    io.to('123').emit("message", generateMessage(message));
     callback();
   });
 
