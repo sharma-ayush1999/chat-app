@@ -23,20 +23,19 @@ const { username, room } = Qs.parse(location.search, {
 });
 
 socket.on("message", (message) => {
-  console.log(message);
   const html = Mustache.render(messageTemplate, {
-    // message: message
+    username: message.username,
     message: message.text,
     createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
 
-socket.on("locationMessage", (url) => {
-  console.log(url);
+socket.on("locationMessage", (message) => {
   const html = Mustache.render(locationMessageTemplate, {
-    url: url.text,
-    createdAt: moment(url.createdAt).format("h:mm a"),
+    username: message.username,
+    url: message.url,
+    createdAt: moment(message.createdAt).format("h:mm a"),
   });
   $messages.insertAdjacentHTML("beforeend", html);
 });
@@ -83,7 +82,12 @@ $sendLocationButton.addEventListener("click", () => {
   });
 });
 
-socket.emit("join", { username, room });
+socket.emit("join", { username, room }, (error) => {
+  if (error) {
+    alert(error);
+    location.href = "/";
+  }
+});
 
 // socket.on('countUpdated', (count) => {
 //     console.log('The count has been updated!', count)
