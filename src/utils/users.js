@@ -55,24 +55,3 @@ module.exports = {
     getUsersInRoom
 }
 
-// addUser({
-//     id: 22,
-//     username: 'Ayush',
-//     room: '123'
-// })
-// addUser({
-//   id: 23,
-//   username: "aye",
-//   room: "123",
-// });
-addUser({
-  id: 21,
-  username: "rey",
-  room: "123",
-});
-
-// const userList = getUserInRoom('123')
-
-console.log(getUser(22))
-// console.log(userList)
-
